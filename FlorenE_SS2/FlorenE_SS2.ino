@@ -10,12 +10,13 @@ White (Pin 1), Green (Pin 2), Red (Pin 3), Blue (Pin 4)
 
 // constant integer variable assign for the first button pin. used as a toggle button.
 
-const int buttonPin = 1;
+const int buttonPin = 1; // a toggle button
 
 bool buttonState = 0;
 bool lastButtonState = 0;
-bool toggle = 1;
-bool offToggle = 0;
+
+bool toggle = 0;
+bool fallToggle = 0;
 
 // constant integer variable assign for control leds' pins
 
@@ -24,15 +25,17 @@ const int ledPin2 = 41; // for red (off)
 
 // constant integer variable assign for the second button pin. used as a push button.
 
-const int buttonPin2 = 4; 
+const int buttonPin2 = 4; // a push button
 
 bool button2State = 0;
-bool lastButton2State = 0;
-bool toggle2 = 1;
-bool offToggle2 = 0;
+
+bool toggle2 = 0;
+bool fallToggle2 = 0;
 
 int counter = 0;
-int maxCount = 5;
+int maxCount = 20;
+
+// constant integer variable assign for auto blink leds' pins
 
 const int ledPin3 = 5; // White
 const int ledPin4 = 6; // Green
@@ -58,219 +61,275 @@ void setup() {
 }
 
 void loop() {
-  buttonState = !digitalRead(buttonPin); // does NOT read the input button pin with voltage first 
-  delay(20);
-  bool button2State = !digitalRead(buttonPin2);
+  buttonState = !digitalRead(buttonPin);
   delay(20);
 
-  // Rising Edge
-
-  // detects the PRESS of a button;
-  if (buttonState && !lastButtonState) { // if the button went from LOW to HIGH...
-
-    toggle = !toggle; // used flipped the bool using NOT logic
-
-    if (button2State && !lastButton2State) {
-      toggle2 = !toggle2;
-      counter++;
-    }
-
-    if (counter == 0) {
-      checkLEDs();
-    }
-
-    if (counter == 1) {
-      allBlinkLEDs();
-    }
-
-    if (counter == 2) {
-      doneCheckedLEDs();
-    }
-
-    if (counter == 3) {
-      siren1();
-    }
-
-    if (counter == 4) {
-      siren2();
-    }
-
-    if (counter == 5) {
-      floral();
-    }
-
-    if (counter > maxCount) {
-      counter = 0;
-      offToggle2 = !offToggle2;
-    }
+  if (buttonState && !lastButtonState) { // if button went from LOW to HIGH...
+    // counter++;
+    toggle = !toggle;
+    digitalWrite(ledPin, toggle);
+    digitalWrite(ledPin2, !toggle);
   }
 
-  // Falling Edge
+  if (counter > maxCount) {
+    counter = 0;
+  }
 
-  // detects the RELEASE of a button;
   if (!buttonState && lastButtonState) {
-    offToggle = !offToggle;
-  } 
+    fallToggle = !fallToggle;
+    digitalWrite(ledPin, fallToggle);
+    digitalWrite(ledPin2, !fallToggle);
+  }
 
   lastButtonState = buttonState;
-  lastButton2State = button2State;
 
-  // Toggle parameters for the LEDs' pins
-  digitalWrite(ledPin, toggle);
-  digitalWrite(ledPin2, offToggle);
+  button2State = !digitalRead(buttonPin2);
 
-  digitalWrite(ledPin3, toggle2);
-  digitalWrite(ledPin3, offToggle2);
-  digitalWrite(ledPin4, toggle2);
-  digitalWrite(ledPin4, offToggle2);
-  digitalWrite(ledPin5, toggle2);
-  digitalWrite(ledPin5, offToggle2);
-  digitalWrite(ledPin6, toggle2);
-  digitalWrite(ledPin6, offToggle2);
+  if (button2State) { // if button went from LOW to HIGH...
+    digitalWrite(ledPin3, toggle2);
+    digitalWrite(ledPin4, toggle2);
+    digitalWrite(ledPin5, toggle2);
+    digitalWrite(ledPin6, toggle2);
 
-  // Show in serial monitor
-  Serial.printf("Button = %i ; Toggle = %i ; Falling = %i \n", buttonState, toggle, offToggle);
+    delay(500);
+    digitalWrite(ledPin3, HIGH);
+    digitalWrite(ledPin4, HIGH);
+    digitalWrite(ledPin5, HIGH);
+    digitalWrite(ledPin6, HIGH);
+    delay(500);
+    digitalWrite(ledPin3, LOW);
+    digitalWrite(ledPin4, LOW);
+    digitalWrite(ledPin5, LOW);
+    digitalWrite(ledPin6, LOW);
+  }
+
+  if (!button2State) { // if button went from LOW to HIGH...
+    digitalWrite(ledPin3, !fallToggle2);
+    digitalWrite(ledPin4, !fallToggle2);
+    digitalWrite(ledPin5, !fallToggle2);
+    digitalWrite(ledPin6, !fallToggle2);
+  }
+
+  Serial.printf("Button = %i ; Count = %i ; Toggle = %i  ; fallToggle = %i \n", buttonState, counter, toggle, fallToggle);
   Serial.println();
-  Serial.printf("Button (2) = %i ; Counter = %i \n", button2State, counter);
+  Serial.printf("Button = %i ", button2State);
 }
 
-void checkLEDs() {
-  ms += 250;
+// void loop() {
+  // buttonState = !digitalRead(buttonPin); // does NOT read the input button pin with voltage first 
+  // delay(20);
 
-  for (int i = 1; i <= 5; i++) {
-    if (i == 4) {
-      break;
-    }
+//   bool button2State = !digitalRead(buttonPin2);
+//   delay(20);
 
-    delay(ms);
-    digitalWrite(ledPin3, HIGH);
-    delay(ms);
-    digitalWrite(ledPin4, HIGH);
-    delay(ms);
-    digitalWrite(ledPin5, HIGH);
-    delay(ms);
-    digitalWrite(ledPin6, HIGH);
+//   // Rising Edge
 
-    delay(ms);
-    digitalWrite(ledPin3, LOW);
-    delay(ms);
-    digitalWrite(ledPin4, LOW);
-    delay(ms);
-    digitalWrite(ledPin5, LOW);
-    delay(ms);
-    digitalWrite(ledPin6, LOW);
-  }
-}
+//   // detects the PRESS of a button;
+//   if (buttonState && !lastButtonState) { // if the button went from LOW to HIGH...
 
-void allBlinkLEDs() {
-  ms += 250;
+//     toggle = !toggle; // used flipped the bool using NOT logic
 
-  for (int i = 1; i <= 5; i++) {
-    if (i == 4) {
-      break;
-    }
+//     if (button2State && !lastButton2State) {
+//       toggle2 = !toggle2;
+//       counter++;
+//     }
 
-    delay(ms);
-    digitalWrite(ledPin3, HIGH);
-    digitalWrite(ledPin4, HIGH);
-    digitalWrite(ledPin5, HIGH);
-    digitalWrite(ledPin6, HIGH);
-    delay(ms);
-    digitalWrite(ledPin3, LOW);
-    digitalWrite(ledPin4, LOW);
-    digitalWrite(ledPin5, LOW);
-    digitalWrite(ledPin6, LOW);
-  }
-}
+//     if (counter == 0) {
+//       checkLEDs();
+//     }
 
-void doneCheckedLEDs() {
-  ms += 250;
+//     if (counter == 1) {
+//       allBlinkLEDs();
+//     }
+
+//     if (counter == 2) {
+//       doneCheckedLEDs();
+//     }
+
+//     if (counter == 3) {
+//       siren1();
+//     }
+
+//     if (counter == 4) {
+//       siren2();
+//     }
+
+//     if (counter == 5) {
+//       floral();
+//     }
+
+//     if (counter > maxCount) {
+//       counter = 0;
+//       offToggle2 = !offToggle2;
+//     }
+//   }
+
+//   // Falling Edge
+
+//   // detects the RELEASE of a button;
+//   if (!buttonState && lastButtonState) {
+//     offToggle = !offToggle;
+// } 
+
+//   lastButtonState = buttonState;
+//   lastButton2State = button2State;
+
+//   // Toggle parameters for the LEDs' pins
+//   digitalWrite(ledPin, toggle);
+//   digitalWrite(ledPin2, offToggle);
+
+//   digitalWrite(ledPin3, toggle2);
+//   digitalWrite(ledPin3, offToggle2);
+//   digitalWrite(ledPin4, toggle2);
+//   digitalWrite(ledPin4, offToggle2);
+//   digitalWrite(ledPin5, toggle2);
+//   digitalWrite(ledPin5, offToggle2);
+//   digitalWrite(ledPin6, toggle2);
+//   digitalWrite(ledPin6, offToggle2);
+
+//   // Show in serial monitor
+//   Serial.printf("Button = %i ; Toggle = %i ; Falling = %i \n", buttonState, toggle, offToggle);
+//   Serial.println();
+//   Serial.printf("Button (2) = %i ; Counter = %i \n", button2State, counter);
+// }
+
+// void checkLEDs() {
+//   ms += 250;
+
+//   for (int i = 1; i <= 5; i++) {
+//     if (i == 4) {
+//       break;
+//     }
+
+//     delay(ms);
+//     digitalWrite(ledPin3, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin4, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin5, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin6, HIGH);
+
+//     delay(ms);
+//     digitalWrite(ledPin3, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin4, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin5, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin6, LOW);
+//   }
+// }
+
+// void allBlinkLEDs() {
+//   ms += 250;
+
+//   for (int i = 1; i <= 5; i++) {
+//     if (i == 4) {
+//       break;
+//     }
+
+//     delay(ms);
+//     digitalWrite(ledPin3, HIGH);
+//     digitalWrite(ledPin4, HIGH);
+//     digitalWrite(ledPin5, HIGH);
+//     digitalWrite(ledPin6, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin3, LOW);
+//     digitalWrite(ledPin4, LOW);
+//     digitalWrite(ledPin5, LOW);
+//     digitalWrite(ledPin6, LOW);
+//   }
+// }
+
+// void doneCheckedLEDs() {
+//   ms += 250;
   
-  for (int i = 1; i <= 10; i++) {
-    if (i == 4) {
-      break;
-    }
-    delay(ms);
-    digitalWrite(ledPin3, LOW);
-    digitalWrite(ledPin4, LOW);
-    digitalWrite(ledPin5, LOW);
-    digitalWrite(ledPin6, LOW);
-    delay(ms+250);
-    digitalWrite(ledPin3, HIGH);
-    digitalWrite(ledPin4, HIGH);
-    digitalWrite(ledPin5, HIGH);
-    digitalWrite(ledPin6, HIGH);
-  }
-}
+//   for (int i = 1; i <= 10; i++) {
+//     if (i == 4) {
+//       break;
+//     }
+//     delay(ms);
+//     digitalWrite(ledPin3, LOW);
+//     digitalWrite(ledPin4, LOW);
+//     digitalWrite(ledPin5, LOW);
+//     digitalWrite(ledPin6, LOW);
+//     delay(ms+250);
+//     digitalWrite(ledPin3, HIGH);
+//     digitalWrite(ledPin4, HIGH);
+//     digitalWrite(ledPin5, HIGH);
+//     digitalWrite(ledPin6, HIGH);
+//   }
+// }
 
-// ambulence
-void siren1() {
-  ms = 100;
+// // ambulence
+// void siren1() {
+//   ms = 100;
   
-  for (int i = 1; i <= 10; i++) {
-    if (i == 8) {
-      break;
-    }
-    delay(ms);
-    digitalWrite(ledPin6, HIGH);
-    delay(ms);
-    digitalWrite(ledPin6, LOW);
-    delay(ms);
-    digitalWrite(ledPin3, HIGH);
-    delay(ms);
-    digitalWrite(ledPin3, LOW);
-  }
-}
+//   for (int i = 1; i <= 10; i++) {
+//     if (i == 8) {
+//       break;
+//     }
+//     delay(ms);
+//     digitalWrite(ledPin6, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin6, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin3, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin3, LOW);
+//   }
+// }
 
-// police
-void siren2() {
-  ms = 100;
+// // police
+// void siren2() {
+//   ms = 100;
   
-  for (int i = 1; i <= 10; i++) {
-    if (i == 8) {
-      break;
-    }
-    delay(ms);
-    digitalWrite(ledPin6, HIGH);
-    delay(ms);
-    digitalWrite(ledPin6, LOW);
-    delay(ms);
-    digitalWrite(ledPin3, HIGH);
-    delay(ms);
-    digitalWrite(ledPin3, LOW);
-    delay(ms);
-    digitalWrite(ledPin5, HIGH);
-    delay(ms);
-    digitalWrite(ledPin5, LOW);
-  }
-}
+//   for (int i = 1; i <= 10; i++) {
+//     if (i == 8) {
+//       break;
+//     }
+//     delay(ms);
+//     digitalWrite(ledPin6, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin6, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin3, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin3, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin5, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin5, LOW);
+//   }
+// }
 
-void floral() {
-  ms = 500;
+// void floral() {
+//   ms = 500;
 
-  for (int i = 1; i <= 10; i++) {
-    if (i == 4) {
-      break;
-    }
-    delay(ms);
-    digitalWrite(ledPin3, LOW);
-    digitalWrite(ledPin5, LOW);
-    digitalWrite(ledPin6, LOW);
-    delay(ms);
-    digitalWrite(ledPin4, HIGH);
-    delay(ms);
-    digitalWrite(ledPin4, LOW);
-    delay(ms);
-    digitalWrite(ledPin4, HIGH);
-    delay(ms);
-    digitalWrite(ledPin4, LOW);
-    delay(ms);
-    digitalWrite(ledPin4, HIGH);
-    delay(ms);
-    digitalWrite(ledPin4, LOW);
-    delay(ms);
-    digitalWrite(ledPin3, HIGH);
-    digitalWrite(ledPin5, HIGH);
-    digitalWrite(ledPin6, HIGH);
-  }
-}
+//   for (int i = 1; i <= 10; i++) {
+//     if (i == 4) {
+//       break;
+//     }
+//     delay(ms);
+//     digitalWrite(ledPin3, LOW);
+//     digitalWrite(ledPin5, LOW);
+//     digitalWrite(ledPin6, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin4, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin4, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin4, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin4, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin4, HIGH);
+//     delay(ms);
+//     digitalWrite(ledPin4, LOW);
+//     delay(ms);
+//     digitalWrite(ledPin3, HIGH);
+//     digitalWrite(ledPin5, HIGH);
+//     digitalWrite(ledPin6, HIGH);
+//   }
+// }
