@@ -1,7 +1,7 @@
 /*
-When the first button is pushed, the red turns into a green blinking light. 
-If you toggle on the second button, each loops to the next pattern after a certain 
-amount of counts happens.
+When the first button is pressed, the red turns into a green light to start pattern routine.
+If you toggle on the second button, each pattern loops to the next pattern after a certain 
+amount of counts happen.
 */
 
 // switches between control leds when button is pushed
