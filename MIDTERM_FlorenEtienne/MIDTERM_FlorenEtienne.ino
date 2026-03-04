@@ -28,6 +28,7 @@ Using the Touchpoint to increase pattern-LEDs brightness by mapping the brightne
 int wLedPin = 1;
 int wLedPin2 = 2;
 int wLedPin3 = 42;
+int switchTime = 100;
 
 int buttonPin = 6;
 int rLedPin = 4;
@@ -45,6 +46,16 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+
+  // 
+  for(int i = 0; i < 10; i++) {
+    digitalWrite(wLedPin, HIGH);
+    millis(switchTime);
+    digitalWrite(wLedPin, LOW);
+    millis(switchTime);
+    if (i > 5) {
+      break;
+    }
+  }
 
 }
