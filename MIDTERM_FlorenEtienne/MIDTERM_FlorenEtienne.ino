@@ -1,8 +1,8 @@
 /*
-  ____________________________
- |                            |
- | Blinking Light Show System |
- |____________________________|
+  ___________________________________
+ |                                   |
+ | Snow (Blinking Light) Show System |
+ |___________________________________|
 
 Using 1 Button to toggle on and off the System
 
@@ -47,7 +47,7 @@ void setup() {
 
 void loop() {
 
-  // 
+  // pattern 1
   for(int i = 0; i < 10; i++) {
     digitalWrite(wLedPin, HIGH);
     millis(switchTime);
@@ -58,4 +58,25 @@ void loop() {
     }
   }
 
+  // pattern 2
+  for(int i = 0; i < 10; i++) {
+    digitalWrite(wLedPin, HIGH);
+    millis(switchTime);
+    digitalWrite(wLedPin, LOW);
+    millis(switchTime);
+    if (i > 5) {
+      break;
+    }
+  }
+
+  // pattern 3
+  for(int i = 0; i < 10; i++) {
+    digitalWrite(wLedPin, HIGH);
+    millis(switchTime);
+    digitalWrite(wLedPin, LOW);
+    millis(switchTime);
+    if (i > 5) {
+      break;
+    }
+  }
 }
