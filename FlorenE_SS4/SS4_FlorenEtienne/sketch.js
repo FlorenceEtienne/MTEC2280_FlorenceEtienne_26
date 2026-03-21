@@ -13,6 +13,15 @@ let sqPosY = 128;
 let cirPosX;
 let cirPosY = 128;
 
+let tri1_x1 = 25;
+let tri1_y1 = 672;
+let tri1_x2 = 0;
+let tri1_y2 = 720;
+let tri1_x3 = 50;
+let tri1_y3 = 720;
+let triAmount = 25;
+let triSpace = 50;
+
 let guagePosX = 1080/2;
 let guagePosY = 1080/2;
 let guageWidth;
@@ -21,6 +30,9 @@ let guageHeight = 50;
 let colorLength;
 
 function setup() {
+
+  // setting up the serial port in order for p5.js to read the sensors
+  
   serial = new p5.SerialPort();             
   serial.on('list', printList);             
   serial.on('connected', serverConnected);  
@@ -32,6 +44,8 @@ function setup() {
   serial.list();                            
   serial.open(portName, options);           
   
+  // setting up core elements for this p5.js sketch
+
   createCanvas(1080 , 720);
   textSize(64);
   textAlign(CENTER);
@@ -54,16 +68,14 @@ function draw() {
   if (sensors[1] == !0) {
     sqPosY -= 10;
     sqPosY = constrain(sqPosY, 256, 324);
-    cirPosY -= 10;
-    cirPosY = constrain(cirPosY, 256, 324);
+    text('NOT THAT ONE!', width/2, 496);
   }
 
   if (sensors[1] == 0) {
-    cirPosY += 10;
     sqPosY += 10;
   }
   
-  if (guageWidth <= 0 && sensors[3] == 0) {
+  if (guageWidth <= 0 && sensors[3] == 0 || sensors[3] == !0) {
     fill(0, colorLength, 0);
     text('TURN THE POT....', width/2, 496);
   }
@@ -73,15 +85,21 @@ function draw() {
     sqSize = constrain(sqSize, 100, 200);
     background(255);
     fill(255, 0, 255);
+    for (let i = 0; i < triAmount; i += 1) {
+      triangle(tri1_x1, tri1_y1, tri1_x2, tri1_y2, tri1_x3, tri1_y3);
+      tri1_x1 += triSpace;
+      tri1_x2 += triSpace;
+      tri1_x3 += triSpace;
+    }
   }
 
-  if (guageWidth >= 400 && sensors[3] == 0) {
+  if (guageWidth >= 400 && sensors[1] == 0 && sensors[3] == 0) {
     sqSize -= 25;
     sqSize = constrain(sqSize, 100, 200);
     fill(0, 255, 0);
     text('PUSH BUTTON!', width/2, 496);
-    circle(cirPosX + (width/2) - 128, cirPosY + height/2, 50);
-    circle(cirPosX + (width/2) + 128, cirPosY + height/2, 50);
+    circle(cirPosX + (width/2) - 128, cirPosY + (height/2), 50);
+    circle(cirPosX + (width/2) + 128, cirPosY + (height/2), 50);
     cirPosY = constrain(cirPosY, 0, 0);
   }
 
