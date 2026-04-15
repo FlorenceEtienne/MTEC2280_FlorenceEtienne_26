@@ -1,6 +1,6 @@
 
 let serial;
-let portName = 'COM3';
+let portName = 'COM7';
 let options = {baudRate: 9600};
 
 let inData = 0;
@@ -13,12 +13,6 @@ let sqPosY = 128;
 let cirPosX;
 let cirPosY = 128;
 
-let tri1_x1 = 25;
-let tri1_y1 = 672;
-let tri1_x2 = 0;
-let tri1_y2 = 720;
-let tri1_x3 = 50;
-let tri1_y3 = 720;
 let triAmount = 25;
 let triSpace = 50;
 
@@ -56,8 +50,8 @@ function setup() {
 function draw() {
   background(50);
 
-  sqPosX = map(sensors[0], 0, 2, 0, 100);
-  cirPosX = map(sensors[0], 0, 2, 0, 100);
+  sqPosX = map(sensors[0], 0, 2, -100, 45);
+  cirPosX = map(sensors[0], 0, 2, -100, 45);
   
   guageWidth = map(sensors[2], 0, 2, 0, 324);
 
@@ -68,6 +62,9 @@ function draw() {
   if (sensors[1] == !0) {
     sqPosY -= 10;
     sqPosY = constrain(sqPosY, 256, 324);
+  }
+
+  if (guageWidth >= 400 && sensors[1] == !0) {
     text('NOT THAT ONE!', width/2, 496);
   }
 
@@ -75,16 +72,24 @@ function draw() {
     sqPosY += 10;
   }
   
-  if (guageWidth <= 0 && sensors[3] == 0 || sensors[3] == !0) {
+  if (guageWidth <= 0 && guageWidth < 400 && sensors[3] == 0 || sensors[3] == !0) {
     fill(0, colorLength, 0);
-    text('TURN THE POT....', width/2, 496);
+    text('MAX THE POT!', width/2, 496);
   }
+
+  let tri1_x1 = 25;
+  let tri1_y1 = 672;
+  let tri1_x2 = 0;
+  let tri1_y2 = 720;
+  let tri1_x3 = 50;
+  let tri1_y3 = 720;
 
   if (guageWidth >= 400 && sensors[3] == !0) {
     sqSize += 25;
     sqSize = constrain(sqSize, 100, 200);
     background(255);
     fill(255, 0, 255);
+    text('THANK YOU!', width/2, 128);
     for (let i = 0; i < triAmount; i += 1) {
       triangle(tri1_x1, tri1_y1, tri1_x2, tri1_y2, tri1_x3, tri1_y3);
       tri1_x1 += triSpace;
