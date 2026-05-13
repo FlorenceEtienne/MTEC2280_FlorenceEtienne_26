@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://dy4pu10vngcya"]
+
+[ext_resource type="Script" uid="uid://sbaofj1cvpk7" path="res://scripts/test_cube.gd" id="1_bf4sv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hspf7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_bf4sv"]
+
+[node name="TestCube" type="CharacterBody3D" unique_id=1991882136]
+script = ExtResource("1_bf4sv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=958658245]
+shape = SubResource("BoxShape3D_hspf7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=239103845]
+mesh = SubResource("BoxMesh_bf4sv")
+
+[node name="CameraController" type="Node3D" parent="." unique_id=347378683]
+
+[node name="CameraPivot" type="Node3D" parent="CameraController" unique_id=1791413853]
+
+[node name="Camera3D" type="Camera3D" parent="CameraController/CameraPivot" unique_id=576339721]
