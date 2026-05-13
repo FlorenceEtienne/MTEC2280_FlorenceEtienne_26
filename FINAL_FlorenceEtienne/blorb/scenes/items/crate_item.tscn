@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://dlmi1s3ipfe8q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kymi4"]
+size = Vector3(1.5, 1.5, 1.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vsnvh"]
+shading_mode = 0
+albedo_color = Color(1, 0.3471818, 0.3820502, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_el8jm"]
+material = SubResource("StandardMaterial3D_vsnvh")
+size = Vector3(1.5, 1.5, 1.5)
+
+[node name="CrateItem" type="RigidBody3D" unique_id=777847209]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2016209879]
+shape = SubResource("BoxShape3D_kymi4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D" unique_id=2033089127]
+mesh = SubResource("BoxMesh_el8jm")

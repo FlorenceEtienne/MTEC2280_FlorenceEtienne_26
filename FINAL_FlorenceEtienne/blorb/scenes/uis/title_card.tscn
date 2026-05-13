@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://b0mrrbjr35qme"]
+
+[node name="TitleCard" type="CanvasLayer" unique_id=460160518]
+
+[node name="Card" type="Control" parent="." unique_id=1629195662]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Card" unique_id=208330516]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Card/MarginContainer" unique_id=130807331]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Card/MarginContainer/VBoxContainer" unique_id=1627484463]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Scan the player object to start the game."
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
