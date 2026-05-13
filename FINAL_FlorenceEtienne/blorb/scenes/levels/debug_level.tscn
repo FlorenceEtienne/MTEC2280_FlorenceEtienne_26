@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://8nj3fbfgqbcg"]
 
-[ext_resource type="Script" uid="uid://b8uigwhpbvnsk" path="res://scripts/levels/debug_level_manager.gd" id="1_7o5vt"]
 [ext_resource type="PackedScene" uid="uid://dg08lww72sfw4" path="res://scenes/characters/player.tscn" id="1_hkwi7"]
 [ext_resource type="PackedScene" uid="uid://b1u60k3ov731m" path="res://scenes/characters/npc.tscn" id="2_r04o2"]
 [ext_resource type="PackedScene" uid="uid://dlmi1s3ipfe8q" path="res://scenes/items/crate_item.tscn" id="4_5l8w0"]
@@ -8,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://7m4ftfu6grcr" path="res://scenes/items/journal_item.tscn" id="6_nfmkk"]
 [ext_resource type="Script" uid="uid://bu3hox1b2tcpp" path="res://scripts/items/journal_item.gd" id="7_yj7dt"]
 [ext_resource type="PackedScene" uid="uid://flt8xddvdnfx" path="res://scenes/items/documents_item.tscn" id="8_2tovo"]
+[ext_resource type="PackedScene" uid="uid://chxllfek67sql" path="res://scenes/management/serial.tscn" id="9_0anw4"]
 [ext_resource type="Script" uid="uid://dl15ysn0d4p48" path="res://scripts/items/documents_item.gd" id="9_w6k0c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hkwi7"]
@@ -29,7 +29,6 @@ size = Vector3(1.5, 0.5, 2)
 size = Vector3(1.2, 0.2, 1.5)
 
 [node name="Debug Level" type="Node" unique_id=822013991]
-script = ExtResource("1_7o5vt")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=840411829]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
@@ -45,6 +44,7 @@ shape = SubResource("BoxShape3D_hkwi7")
 mesh = SubResource("BoxMesh_r04o2")
 
 [node name="Player" parent="." unique_id=1105433826 groups=["player"] instance=ExtResource("1_hkwi7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1871.2225, 0, 0)
 guide_dialogue = Array[String](["The", "Hi", "Bye", "Win", "Lose", "Can", "You", "Check", "That", "Crate", "Book?", "Grab.", "There", "Are", "Some", "Documents", "To ", "Pick up"])
 
 [node name="NPC" parent="." unique_id=1928711249 instance=ExtResource("2_r04o2")]
@@ -105,6 +105,9 @@ transform = Transform3D(0.7408046, 0, 0.67172056, 0, 1, 0, -0.67172056, 0, 0.740
 pixel_size = 0.006
 billboard = 1
 text = "V"
+
+[node name="Serial" parent="." unique_id=188387691 node_paths=PackedStringArray("player") instance=ExtResource("9_0anw4")]
+player = NodePath("../Player")
 
 [connection signal="area_entered" from="NPC/NPCIndicator" to="Player" method="_on_npc_indicator_area_entered"]
 [connection signal="area_exited" from="NPC/NPCIndicator" to="Player" method="_on_npc_indicator_area_exited"]

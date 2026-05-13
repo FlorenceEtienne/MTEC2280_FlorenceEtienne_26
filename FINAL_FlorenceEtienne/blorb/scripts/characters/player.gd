@@ -1,18 +1,27 @@
 extends CharacterBody3D
 
-# Constant 
-const SPEED = 10.5
-const JUMP = 10
+var player_spawn = false
 
+# Movement
+const speed = 10.5
+const jump = 10
+
+#Directions
+var direction_x = 0
+var direction_y = 0
+var direction_z = 0
+
+#Jumping
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 # Dialogue
 @export var guide_dialogue : Array[String] = []
 var dialogue_index = 0 #holding the positions of each string in the array
+
 #var guide_intro = 1
 #var guide_intro_end = 5
-
 #var guide_crate_start = 6
+
 var guide_crate = 1
 var guide_crate_end = 10
 
@@ -55,36 +64,79 @@ var item_collected : int = 0
 
 #var guide_located = false
 
-func _physics_process(delta: float) -> void:
+func _ready() -> void:
+	visible = false
 	
+func _physics_process(_delta: float) -> void:
+		
 	#camera rotation
-	if Input.is_action_pressed("player_left"):
-		$CameraController.rotate_y(deg_to_rad(2.5))
-	if Input.is_action_pressed("player_right"):
-		$CameraController.rotate_y(deg_to_rad(-2.5))
+	#if Input.is_action_pressed("player_left"):
+		#$CameraController.rotate_y(deg_to_rad(2.5))
+	#if Input.is_action_pressed("player_right"):
+		#$CameraController.rotate_y(deg_to_rad(-2.5))
+		#
+	##jump
+	#if Input.is_action_just_pressed("player_jump") and is_on_floor():
+		#velocity.y = jump
+	#if not is_on_floor():
+		#velocity.y -= gravity * delta
+		#
+	##direction of player's movements
+	#var input_dir = Input.get_vector("player_left","player_right","player_forward","player_backward",)
+	#var direction = ($CameraController.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	#
+	#if direction:
+		#velocity.x = direction.x * speed
+		#velocity.z = direction.z * speed
+	#else:
+		#velocity.x = move_toward(velocity.x, 0, speed)
+		#velocity.z = move_toward(velocity.z, 0, speed)
 		
-	#jump
-	if Input.is_action_just_pressed("player_jump") and is_on_floor():
-		velocity.y = JUMP
-	if not is_on_floor():
-		velocity.y -= gravity * delta
-		
-	#direction of player's movements
-	var input_dir = Input.get_vector("player_left","player_right","player_forward","player_backward",)
-	var direction = ($CameraController.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	
-	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
+	velocity.x = move_toward(velocity.x, direction_x, speed)
+	velocity.z = move_toward(velocity.z, direction_z, speed)
 		
 	move_and_slide()
-	
+		
 	#camera movements
 	$CameraController.position = position
+		
+func _spawn_player(spawn) -> void:
+	if spawn == 2 and player_spawn == false:
+		player_spawn = true
+		visible = true
+		global_position = Vector3(0,1,0)
 	
+func _move_direction(left, right, forward, backward) -> void:
+	if left == 1:
+		direction_x = -5
+	if right == 1:
+		direction_x = 5
+	if forward == 1:
+		direction_z = -5
+	if backward == 1:
+		direction_z = 5
+		
+	if forward == 1 and left == 1:
+		direction_x = -5
+		direction_z = -5
+		#$CameraController.rotate_y(deg_to_rad(2.5))
+	if forward == 1 and right == 1:
+		direction_x = 5
+		direction_z = -5
+		#$CameraController.rotate_y(deg_to_rad(-2.5))
+	if backward == 1 and left == 1:
+		direction_x = -5
+		direction_z = 5
+	if backward == 1 and right == 1:
+		direction_x = 5
+		direction_z = 5
+		
+	if left == 0 and right == 0:
+		direction_x = 0
+	if forward == 0 and backward == 0:
+		direction_z = 0
+		
+# ---------------- Interaction Portion ---------------- #
 # NPC Area
 func _on_npc_indicator_area_entered(_area: Area3D) -> void:
 	npc_interaction = true
@@ -121,19 +173,20 @@ func _on_documents_located_area_exited(_area: Area3D) -> void:
 	docu_interaction = false
 	documents_indicator.text = "V"
 	
-func _unhandled_input(_InputEvent) -> void:
+func _unhandled_input(interact) -> void:
 	if npc_interaction == true and task_one_completed == false and collect_crate == false:
-		if Input.is_action_just_pressed("player_interact"):
+		if interact == 1:
 			npc_dialogue.text = guide_dialogue[dialogue_index]
 			dialogue_index += guide_crate
 			if dialogue_index == guide_crate_end and dialogue_index < guide_journal_start:
 				collect_crate = true
 				emit_signal("collected_item")
+				
 		#if Input.is_action_just_pressed("player_interact") and task_one_completed == false and collect_crate == true:
 			#npc_dialogue.text = "Crate."
 			
 	if npc_interaction == true and task_two_completed == false and task_one_completed == true and collect_journal == false:
-		if Input.is_action_just_pressed("player_interact"):
+		if interact == 1:
 			#dialogue_index = guide_journal_start
 			npc_dialogue.text = guide_dialogue[dialogue_index]
 			dialogue_index += guide_journal
@@ -144,7 +197,7 @@ func _unhandled_input(_InputEvent) -> void:
 			#npc_dialogue.text = "Journal."
 			
 	if npc_interaction == true and task_three_completed == false and task_two_completed == true and task_one_completed == true and collect_documents == false:
-		if Input.is_action_just_pressed("player_interact"):
+		if interact == 1:
 			#dialogue_index = guide_docu_start
 			npc_dialogue.text = guide_dialogue[dialogue_index]
 			dialogue_index += guide_docu
@@ -155,23 +208,23 @@ func _unhandled_input(_InputEvent) -> void:
 			#npc_dialogue.text = "Documents."
 		
 	if npc_interaction == true and task_three_completed == true and task_two_completed == true and task_one_completed == true:
-		if Input.is_action_just_pressed("player_interact"):
+		if interact == 1:
 			npc_dialogue.text = "Thank you! These should help you complete your report."
 
 	if crate_interaction == true and collect_crate == true:
-		if Input.is_action_just_pressed("player_interact"):
+		if interact == 1:
 			$"../CrateItem/CrateIndicator".get_parent().queue_free()
 			item_collected = 1
 			print("Item Collected: " + str(item_collected))
 			task_one_completed = true
 	if journal_interaction == true and collect_journal == true:
-		if Input.is_action_just_pressed("player_interact"):
+		if interact == 1:
 			$"../JournalItem/JournalIndicator".get_parent().queue_free()
 			item_collected = 2
 			print("Item Collected: " + str(item_collected))
 			task_two_completed = true
 	if docu_interaction == true and collect_documents == true:
-		if Input.is_action_just_pressed("player_interact"):
+		if interact == 1:
 			$"../DocumentsItem/DocumentsLocated".get_parent().queue_free() #the other items needs to swap their indicators to located
 			item_collected = 3
 			print("Item Collected: " + str(item_collected))
