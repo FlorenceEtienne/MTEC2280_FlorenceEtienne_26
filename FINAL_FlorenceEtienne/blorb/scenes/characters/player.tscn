@@ -1,15 +1,10 @@
 [gd_scene format=3 uid="uid://dg08lww72sfw4"]
 
 [ext_resource type="Script" uid="uid://c4ig506jsi0fo" path="res://scripts/characters/player.gd" id="1_rp718"]
+[ext_resource type="Texture2D" uid="uid://cttx55xghq0rw" path="res://sprites/nero-spr-rework-frontside.png" id="2_yewv4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rp718"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rp718"]
-shading_mode = 0
-albedo_color = Color(0, 0.7325481, 0.70541227, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_yewv4"]
-material = SubResource("StandardMaterial3D_rp718")
+height = 3.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rp718"]
 size = Vector3(2, 3, 2)
@@ -21,7 +16,11 @@ script = ExtResource("1_rp718")
 shape = SubResource("CapsuleShape3D_rp718")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D" unique_id=1112907896]
-mesh = SubResource("CapsuleMesh_yewv4")
+
+[node name="Sprite3D" type="Sprite3D" parent="CollisionShape3D" unique_id=850690490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11611116, 0)
+billboard = 1
+texture = ExtResource("2_yewv4")
 
 [node name="CameraController" type="Node3D" parent="." unique_id=1359364933]
 top_level = true

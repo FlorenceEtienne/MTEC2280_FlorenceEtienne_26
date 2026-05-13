@@ -1,18 +1,18 @@
 [gd_scene format=3 uid="uid://b1u60k3ov731m"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7qyh0"]
+[ext_resource type="Texture2D" uid="uid://cttx55xghq0rw" path="res://sprites/nero-spr-rework-frontside.png" id="1_ceaqc"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7qyh0"]
-shading_mode = 0
-albedo_color = Color(0.52309567, 0.0001670137, 0.51218563, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_ceaqc"]
-material = SubResource("StandardMaterial3D_7qyh0")
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_84hc2"]
+height = 3.0
 
 [node name="NPC" type="CharacterBody3D" unique_id=1928711249]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1291758468]
-shape = SubResource("CapsuleShape3D_7qyh0")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1217653985]
+shape = SubResource("CapsuleShape3D_84hc2")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D" unique_id=939127925]
-mesh = SubResource("CapsuleMesh_ceaqc")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D" unique_id=1155071813]
+
+[node name="Sprite3D" type="Sprite3D" parent="CollisionShape3D" unique_id=1953642728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11611116, 0)
+billboard = 1
+texture = ExtResource("1_ceaqc")

@@ -45,11 +45,10 @@ shape = SubResource("BoxShape3D_hkwi7")
 mesh = SubResource("BoxMesh_r04o2")
 
 [node name="Player" parent="." unique_id=1105433826 groups=["player"] instance=ExtResource("1_hkwi7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 guide_dialogue = Array[String](["The", "Hi", "Bye", "Win", "Lose", "Can", "You", "Check", "That", "Crate", "Book?", "Grab.", "There", "Are", "Some", "Documents", "To ", "Pick up"])
 
 [node name="NPC" parent="." unique_id=1928711249 instance=ExtResource("2_r04o2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.5, 11)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2, 11)
 
 [node name="NPCIndicator" type="Area3D" parent="NPC" unique_id=1536461532]
 
